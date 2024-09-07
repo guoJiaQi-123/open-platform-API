@@ -1,20 +1,25 @@
 use tlrj_api;
 -- 接口信息表-
-create table if not exists tlrj_api.`interface_info`
+CREATE TABLE `interface_info`
 (
-    `id`             bigint                             not null auto_increment comment '主键' primary key,
-    `name`           varchar(256)                       not null comment '接口名称',
-    `description`    varchar(256)                       null comment '接口描述',
-    `url`            varchar(512)                       not null comment '接口地址',
-    `method`         varchar(256)                       not null comment '接口方法',
-    `requestHeader`  text                               null comment '请求头',
-    `responseHeader` text                               null comment '响应头',
-    `status`         int                                not null comment '接口状态',
-    `userId`         bigint                             not null comment '接口创建者',
-    `createTime`     datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-    `updateTime`     datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    `is_deleted`     tinyint  default 0                 not null comment '是否删除(0-未删, 1-已删)'
-) comment '接口信息表-' collate = utf8mb4_unicode_ci;
+    `id`             bigint(20)                              NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `name`           varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '接口名称',
+    `description`    varchar(256) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '接口描述',
+    `url`            varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '接口地址',
+    `method`         varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '接口方法',
+    `requestHeader`  text COLLATE utf8mb4_unicode_ci COMMENT '请求头',
+    `responseHeader` text COLLATE utf8mb4_unicode_ci COMMENT '响应头',
+    `status`         int(11)                                 NOT NULL DEFAULT '0' COMMENT '接口状态',
+    `userId`         bigint(20)                              NOT NULL COMMENT '接口创建者',
+    `createTime`     datetime                                NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updateTime`     datetime                                NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `isDeleted`     tinyint(4)                              NOT NULL DEFAULT '0' COMMENT '是否删除(0-未删, 1-已删)',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 21
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT ='接口信息表-';
+
 
 insert into tlrj_api.`interface_info` (`name`, `description`, `url`, `method`, `requestHeader`, `responseHeader`,
                                        `status`, `userId`)

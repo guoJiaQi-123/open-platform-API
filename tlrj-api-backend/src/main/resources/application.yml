@@ -3,7 +3,7 @@
 # @from <a href="https://github.com/guoJiaQi-123/TYUT-SmartViewBI-backend">GitHub地址</a>
 spring:
   application:
-    name: springboot-init
+    name: tlrj-api-backend
   # 默认 dev 环境
   profiles:
     active: dev
@@ -21,7 +21,7 @@ spring:
   # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/my_db
+    url: jdbc:mysql://localhost:3306/tlrj_api
     username: root
     password: 123456
   # Redis 配置
@@ -45,7 +45,7 @@ spring:
       max-file-size: 10MB
 server:
   address: 0.0.0.0
-  port: 8101
+  port: 7529
   servlet:
     context-path: /api
     # cookie 30 天过期
