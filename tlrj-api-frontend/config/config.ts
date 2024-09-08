@@ -128,8 +128,6 @@ export default defineConfig({
    * @doc https://pro.ant.design/zh-cn/docs/openapi/
    */
   openAPI: [
-
-    // todo
     {
       requestLibPath: "import { request } from '@umijs/max'",
       schemaPath: 'http://localhost:7529/api/v2/api-docs',

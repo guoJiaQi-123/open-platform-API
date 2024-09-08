@@ -2,7 +2,6 @@ package com.tlrj.springbootinit.service;
 
 import com.tlrj.springbootinit.model.entity.InterfaceInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tlrj.springbootinit.model.entity.Post;
 
 /**
 * @author HX
@@ -13,7 +12,7 @@ public interface InterfaceInfoService extends IService<InterfaceInfo> {
     /**
      * 校验
      *
-     * @param post
+     * @param interfaceInfo
      * @param add
      */
     void validInterfaceInfo(InterfaceInfo interfaceInfo, boolean add);
