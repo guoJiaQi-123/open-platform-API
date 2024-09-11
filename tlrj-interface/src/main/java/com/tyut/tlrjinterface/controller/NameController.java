@@ -1,8 +1,8 @@
 package com.tyut.tlrjinterface.controller;
 
-import cn.hutool.http.HttpRequest;
-import com.tyut.tlrjinterface.model.User;
-import com.tyut.tlrjinterface.utils.SignUtil;
+
+import com.tyut.apiclientsdk.model.User;
+import com.tyut.apiclientsdk.utils.SignUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;

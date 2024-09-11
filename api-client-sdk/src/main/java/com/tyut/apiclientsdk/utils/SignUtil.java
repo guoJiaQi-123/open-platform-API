@@ -1,4 +1,4 @@
-package com.tyut.tlrjinterface.utils;
+package com.tyut.apiclientsdk.utils;
 
 import cn.hutool.crypto.digest.DigestAlgorithm;
 import cn.hutool.crypto.digest.Digester;

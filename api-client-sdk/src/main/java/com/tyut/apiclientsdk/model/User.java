@@ -1,4 +1,4 @@
-package com.tyut.tlrjinterface.model;
+package com.tyut.apiclientsdk.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

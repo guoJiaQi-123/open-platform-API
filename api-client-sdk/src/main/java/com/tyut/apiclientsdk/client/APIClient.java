@@ -1,18 +1,18 @@
-package com.tyut.tlrjinterface.client;
+package com.tyut.apiclientsdk.client;
+
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.tyut.tlrjinterface.model.User;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import com.tyut.apiclientsdk.model.User;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.tyut.tlrjinterface.utils.SignUtil.getSign;
+import static com.tyut.apiclientsdk.utils.SignUtil.getSign;
+
 
 /**
  * @version v1.0
@@ -22,8 +22,9 @@ import static com.tyut.tlrjinterface.utils.SignUtil.getSign;
 @SuppressWarnings("all")
 public class APIClient {
 
+    //访问密钥
     private String accessKey;
-
+    // 秘密密钥
     private String secretKey;
 
     public APIClient(String accessKey, String secretKey) {
@@ -31,25 +32,38 @@ public class APIClient {
         this.secretKey = secretKey;
     }
 
-
+    /**
+     * 调用服务端的get方法获取响应内容
+     * @param name
+     * @return
+     */
     public String getNameByGET(String name) {
         //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", name);
         String result = HttpUtil.get("http://localhost:6677/api/name/", paramMap);
-        System.out.println(result);
         return result;
     }
 
 
-    public String getNameByPost(@RequestParam String name) {
+    /**
+     * 调用服务端的POST方法获取响应内容
+     * @param name
+     * @return
+     */
+    public String getNameByPost(String name) {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", name);
         String result = HttpUtil.post("http://localhost:6677/api/name/", paramMap);
-        System.out.println(result);
         return result;
     }
 
+
+    /**
+     * 构造请求头参数
+     * @param body
+     * @return
+     */
     private Map<String, String> getHeaderMap(String body) {
         Map<String, String> map = new HashMap<>();
         map.put("accessKey", accessKey);
@@ -61,18 +75,22 @@ public class APIClient {
     }
 
 
-    public String getNameByPost(@RequestBody User user) {
+    /**
+     * 调用服务端的POST方法，参数以对象的形式传输
+     * @param user
+     * @return
+     */
+    public String getNameByPost(User user) {
+        // 改为json格式
         String jsonStr = JSONUtil.toJsonStr(user);
+        // 获取请求头参数
         Map<String, String> headerMap = getHeaderMap(jsonStr);
+        // 封装请求
         HttpResponse httpResponse = HttpRequest.post("http://localhost:6677/api/name/user")
                 .addHeaders(headerMap)
                 .body(jsonStr)
                 .execute();
-        int status = httpResponse.getStatus();
-        System.out.println("请求状态" + status);
-        String result = httpResponse.body();
-        System.out.println(result);
-        return result;
+        return httpResponse.body();
     }
 
 }
