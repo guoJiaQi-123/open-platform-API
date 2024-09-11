@@ -16,10 +16,12 @@ import com.tlrj.springbootinit.model.vo.LoginUserVO;
 import com.tlrj.springbootinit.model.vo.UserVO;
 import com.tlrj.springbootinit.service.UserService;
 import com.tlrj.springbootinit.utils.SqlUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -70,6 +72,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
             // 3. 插入数据
             User user = new User();
+            user.setAccessKey("ababab");
+            user.setSecretKey("abcdefgh");
             user.setUserAccount(userAccount);
             user.setUserPassword(encryptPassword);
             boolean saveResult = this.save(user);

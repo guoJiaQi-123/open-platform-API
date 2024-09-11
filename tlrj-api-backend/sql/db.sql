@@ -13,7 +13,7 @@ CREATE TABLE `interface_info`
     `userId`         bigint(20)                              NOT NULL COMMENT '接口创建者',
     `createTime`     datetime                                NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updateTime`     datetime                                NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `isDeleted`     tinyint(4)                              NOT NULL DEFAULT '0' COMMENT '是否删除(0-未删, 1-已删)',
+    `isDeleted`      tinyint(4)                              NOT NULL DEFAULT '0' COMMENT '是否删除(0-未删, 1-已删)',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 21
