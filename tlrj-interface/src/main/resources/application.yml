@@ -1,0 +1,8 @@
+server:
+  port: 6677
+  servlet:
+    context-path: /api
+mazai:
+  api:
+    access-key: ababab
+    secret-key: abcdefgh
