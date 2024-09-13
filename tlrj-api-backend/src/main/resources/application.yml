@@ -90,3 +90,7 @@ cos:
     secretKey: xxx
     region: xxx
     bucket: xxx
+mazai:
+  api:
+    access-key: ababab
+    secret-key: abcdefgh

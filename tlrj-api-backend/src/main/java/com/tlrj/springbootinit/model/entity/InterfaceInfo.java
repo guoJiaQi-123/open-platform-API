@@ -3,14 +3,17 @@ package com.tlrj.springbootinit.model.entity;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 接口信息表-
  * @TableName interface_info
  */
-@TableName(value ="interface_info")
+@TableName(value = "interface_info")
 @Data
 public class InterfaceInfo implements Serializable {
     /**
@@ -40,6 +43,10 @@ public class InterfaceInfo implements Serializable {
     private String method;
 
     /**
+     * 请求参数
+     */
+    private String requestParams;
+    /**
      * 请求头
      */
     private String requestHeader;
@@ -62,12 +69,25 @@ public class InterfaceInfo implements Serializable {
     /**
      * 创建时间
      */
+    @DateTimeFormat(style = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
+
+    @TableField(exist = false)
+    private String updateTimeFormat;
+    @TableField(exist = false)
+    private String createTimeFormat;
+
+    public void formattedDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        updateTimeFormat = sdf.format(updateTime);
+        createTimeFormat = sdf.format(createTime);
+    }
 
     /**
      *

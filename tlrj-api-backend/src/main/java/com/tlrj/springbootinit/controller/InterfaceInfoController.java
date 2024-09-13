@@ -4,33 +4,31 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
 import com.tlrj.springbootinit.annotation.AuthCheck;
-import com.tlrj.springbootinit.common.BaseResponse;
-import com.tlrj.springbootinit.common.DeleteRequest;
-import com.tlrj.springbootinit.common.ErrorCode;
-import com.tlrj.springbootinit.common.ResultUtils;
+import com.tlrj.springbootinit.common.*;
 import com.tlrj.springbootinit.constant.CommonConstant;
 import com.tlrj.springbootinit.constant.UserConstant;
 import com.tlrj.springbootinit.exception.BusinessException;
 import com.tlrj.springbootinit.exception.ThrowUtils;
 import com.tlrj.springbootinit.model.dto.interfaceinfo.InterfaceInfoAddRequest;
+import com.tlrj.springbootinit.model.dto.interfaceinfo.InterfaceInfoInvokeRequest;
 import com.tlrj.springbootinit.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 import com.tlrj.springbootinit.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import com.tlrj.springbootinit.model.entity.InterfaceInfo;
 import com.tlrj.springbootinit.model.entity.User;
+import com.tlrj.springbootinit.model.enums.InterfaceInfoStatusEnum;
 import com.tlrj.springbootinit.service.InterfaceInfoService;
 import com.tlrj.springbootinit.service.UserService;
 import com.tlrj.springbootinit.utils.SqlUtils;
+import com.tyut.apiclientsdk.client.APIClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 /**
  * 接口信息管理
@@ -48,6 +46,9 @@ public class InterfaceInfoController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private APIClient apiClient;
 
     private final static Gson GSON = new Gson();
 
@@ -127,6 +128,18 @@ public class InterfaceInfoController {
 
 
     /**
+     *  根据id查询
+     * @param id
+     * @return
+     */
+    @GetMapping("/get")
+    public BaseResponse<InterfaceInfo> getInterfaceInfoByID(Long id) {
+        InterfaceInfo interfaceInfo = interfaceInfoService.getById(id);
+        interfaceInfo.formattedDate();
+        return ResultUtils.success(interfaceInfo);
+    }
+
+    /**
      * 分页获取列表（封装类）
      *
      * @param interfaceInfoQueryRequest
@@ -170,6 +183,7 @@ public class InterfaceInfoController {
     }
 
     /**
+     *
      * 获取查询包装类
      *
      * @param interfaceInfoQueryRequest
@@ -202,5 +216,99 @@ public class InterfaceInfoController {
                 sortField);
         return queryWrapper;
     }
+
+    /**
+     * 上线
+     *
+     * @param idRequest
+     * @return
+     */
+    @PostMapping("/online")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> onlineInterfaceInfo(@RequestBody IdRequest idRequest) {
+
+        if (idRequest == null || idRequest.getId() < 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Long id = idRequest.getId();
+        // 判断是否存在
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        if (oldInterfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        String name = apiClient.getNameByPost(new com.tyut.apiclientsdk.model.User("test"));
+        if (StringUtils.isBlank(name)) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+        }
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setId(id);
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.ONLINE.getValue());
+        boolean result = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(result);
+    }
+
+    /**
+     * 下线
+     *
+     * @param idRequest
+     * @return
+     */
+    @PostMapping("/offline")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> offlineInterfaceInfo(@RequestBody IdRequest idRequest) {
+
+
+        if (idRequest == null || idRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Long id = idRequest.getId();
+        // 判断是否存在
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        if (oldInterfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setId(id);
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.OFFLINE.getValue());
+        boolean result = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(result);
+    }
+
+
+    /**
+     * 接口调用
+     *
+     * @param interfaceInfoInvokeRequest
+     * @return
+     */
+    @PostMapping("/invoke")
+    public BaseResponse<Object> invokeInterfaceInfo(@RequestBody InterfaceInfoInvokeRequest interfaceInfoInvokeRequest
+            , HttpServletRequest request) {
+        if (interfaceInfoInvokeRequest == null || interfaceInfoInvokeRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Long id = interfaceInfoInvokeRequest.getId();
+        String requestParams = interfaceInfoInvokeRequest.getUserRequestParams();
+        // 判断是否存在
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        if (oldInterfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        if (Objects.equals(oldInterfaceInfo.getStatus(), InterfaceInfoStatusEnum.OFFLINE.getValue())) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "接口已关闭");
+        }
+        // 获取当前登陆的用户
+        User loginUser = userService.getLoginUser(request);
+        String accessKey = loginUser.getAccessKey();
+        String secretKey = loginUser.getSecretKey();
+        // 使用当前登陆的用户的accessKey 和secretKey创建client对象
+        APIClient apiClient = new APIClient(accessKey, secretKey);
+        // 将前端传来的参数创建为一个user对象
+        Gson gson = new Gson();
+        com.tyut.apiclientsdk.model.User user = gson.fromJson(requestParams, com.tyut.apiclientsdk.model.User.class);
+        String respond = apiClient.getNameByPost(user);
+        return ResultUtils.success(respond);
+    }
+
 
 }

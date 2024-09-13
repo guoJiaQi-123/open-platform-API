@@ -8,6 +8,7 @@ CREATE TABLE `interface_info`
     `url`            varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '接口地址',
     `method`         varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '接口方法',
     `requestHeader`  text COLLATE utf8mb4_unicode_ci COMMENT '请求头',
+    `requestParams`  text                                    null comment '请求参数',
     `responseHeader` text COLLATE utf8mb4_unicode_ci COMMENT '响应头',
     `status`         int(11)                                 NOT NULL DEFAULT '0' COMMENT '接口状态',
     `userId`         bigint(20)                              NOT NULL COMMENT '接口创建者',
