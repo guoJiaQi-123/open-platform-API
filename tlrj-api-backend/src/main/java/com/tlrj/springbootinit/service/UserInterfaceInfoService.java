@@ -10,5 +10,14 @@ import com.tlrj.springbootinit.model.entity.UserInterfaceInfo;
 */
 public interface UserInterfaceInfoService extends IService<UserInterfaceInfo> {
 
-    void validUserInterfaceInfo(UserInterfaceInfo userInterfaceInfo, boolean b);
+    void validUserInterfaceInfo(UserInterfaceInfo userInterfaceInfo, boolean add);
+
+    /**
+     * 接口调用次数-1
+     * @param userId
+     * @param interfaceId
+     * @return
+     */
+    boolean invokeCount(Long userId,Long interfaceId);
+
 }

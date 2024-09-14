@@ -58,7 +58,5 @@ public class UserInterfaceInfoQueryRequest extends PageRequest implements Serial
      */
     private Date updateTime;
 
-
-
     private static final long serialVersionUID = 1L;
 }
