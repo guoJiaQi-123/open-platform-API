@@ -5,12 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tlrj.springbootinit.common.ErrorCode;
 import com.tlrj.springbootinit.exception.BusinessException;
-import com.tlrj.springbootinit.exception.ThrowUtils;
 import com.tlrj.springbootinit.mapper.UserInterfaceInfoMapper;
-import com.tlrj.springbootinit.model.entity.InterfaceInfo;
 import com.tlrj.springbootinit.model.entity.UserInterfaceInfo;
 import com.tlrj.springbootinit.service.UserInterfaceInfoService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

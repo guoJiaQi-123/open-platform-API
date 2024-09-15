@@ -22,6 +22,8 @@ import static com.tyut.apiclientsdk.utils.SignUtil.getSign;
 @SuppressWarnings("all")
 public class APIClient {
 
+    private final String GATEWAY_HOST = "http://localhost:8848";
+
     //访问密钥
     private String accessKey;
     // 秘密密钥
@@ -41,7 +43,7 @@ public class APIClient {
         //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", name);
-        String result = HttpUtil.get("http://localhost:6677/api/name/", paramMap);
+        String result = HttpUtil.get(GATEWAY_HOST + "/api/name/get", paramMap);
         return result;
     }
 
@@ -54,7 +56,7 @@ public class APIClient {
     public String getNameByPost(String name) {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", name);
-        String result = HttpUtil.post("http://localhost:6677/api/name/", paramMap);
+        String result = HttpUtil.post(GATEWAY_HOST + "/api/name/post", paramMap);
         return result;
     }
 
@@ -86,7 +88,7 @@ public class APIClient {
         // 获取请求头参数
         Map<String, String> headerMap = getHeaderMap(jsonStr);
         // 封装请求
-        HttpResponse httpResponse = HttpRequest.post("http://localhost:6677/api/name/user")
+        HttpResponse httpResponse = HttpRequest.post(GATEWAY_HOST + "/api/name/user")
                 .addHeaders(headerMap)
                 .body(jsonStr)
                 .execute();

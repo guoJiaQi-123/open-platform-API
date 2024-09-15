@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: tlrj-api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: api-url
+          uri: http://localhost:6677
+          predicates:
+            - Path=/api/**
+server:
+  port: 8848
