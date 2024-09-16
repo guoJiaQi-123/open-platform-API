@@ -4,13 +4,14 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import lombok.Data;
 
 /**
  * 用户调用接口关系
  * @TableName user_interface_info
  */
-@TableName(value ="user_interface_info")
+@TableName(value = "user_interface_info")
 @Data
 public class UserInterfaceInfo implements Serializable {
     /**
